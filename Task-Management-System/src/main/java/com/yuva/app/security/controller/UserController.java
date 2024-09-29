@@ -24,7 +24,6 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> loginHandler(@RequestBody LoginRequest loginRequest){
-		System.out.println("In Login controller!");
 		return ResponseEntity.ok(userService.login(loginRequest));
 		
 	}
@@ -37,7 +36,6 @@ public class UserController {
 	//to get new JWT from refresh token
 	@PostMapping("/jwt")
 	public ResponseEntity<JwtResponse> refreshTokens(@RequestParam String refreshToken){
-		System.out.println("Yeah yay");
 		return ResponseEntity.ok(userService.generateNewJwt(refreshToken));
 	}
 	

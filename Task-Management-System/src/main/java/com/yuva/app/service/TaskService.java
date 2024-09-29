@@ -87,10 +87,9 @@ public class TaskService {
 
 		//getting username from jwt to verify the authorization access of the user
 		String username = getUsername(request);
-		Role role = userService.getRoleByUsername(username);
 
-		//checking if the user is the owner of the task and also checking if the user is Admin
-		if (!username.equals(task.getusername()) && !role.equals("ADMIN"))
+		//checking if the user is the owner of the task
+		if (!username.equals(task.getusername()))
 			throw new UnAuthorizedTaskAccessExecption("Can not access the task with id " + taskDto.getTaskId());
 		Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskDto.getDueDate());
 
@@ -104,24 +103,25 @@ public class TaskService {
 
 		//getting username from jwt to verify the authorization access of the user
 		String username = getUsername(request);
-		Role role = userService.getRoleByUsername(username);
 
-		//checking if the user is the owner of the task and also checking if the user is Admin
-		if (!username.equals(task.getusername()) && !role.equals("ADMIN"))
+		//checking if the user is the owner of the task
+		if (!username.equals(task.getusername()))
 			throw new UnAuthorizedTaskAccessExecption("Can not access the task with id " + id);
 
 		taskRepo.delete(task);
 	}
 
-	public TaskPageResponse getAllTaskPages(int pageNumber, int pageSize) {
+	public TaskPageResponse getAllTaskPages(int pageNumber, int pageSize, HttpServletRequest request) {
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
+		
+		String username = getUsername(request);
 		Page<Task> taskpages = taskRepo.findAll(pageable);
 		List<Task> tasks = taskpages.getContent();
 		List<TaskDto> taskDtos = new ArrayList<>();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		for (Task task : tasks) {
-			
+			if(!username.equals(task.getusername()))
+				continue;
 			TaskDto taskDto = new TaskDto(task.getTaskId(), task.getTitle(), task.getDescription(), df.format(task.getDueDate()),
 					task.getPriority());
 			taskDtos.add(taskDto);
@@ -146,6 +146,15 @@ public class TaskService {
 		}
 
 		return userName;
+	}
+
+	public List<Task> adminGetAllTasks() {
+		return taskRepo.findAll();
+	}
+
+	public void adminDeleteTask(Integer taskId) {
+		taskRepo.deleteById(taskId);
+		
 	}
 
 }

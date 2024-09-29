@@ -68,9 +68,6 @@ public class UserService {
 		return new JwtResponse(jwt, user.getUsername(), user.getEmail());
 	}
 
-	public Role getRoleByUsername(String username) {
-		return userRepo.findByUsername(username).get().getRole();
-	}
 
 	public String changePassword(String password, String reEnterPassword, String email) {
 		userRepo.updatePassword(bcrypt.encode(password), email);
