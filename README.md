@@ -36,6 +36,11 @@ The **Task Management System** is a backend application built using Spring Boot,
 - `GET /admin/tasks` – Get all tasks (Admin only).
 - `DELETE /admin/tasks/{id}` – Delete any task (Admin only).
 
+### Forgot Password Endpoints
+- `POST /forgotPassword/email/{email}` - verify the email and sends forgot password otp.
+- `POST /forgotPassword/otp` - verify the otp.
+- `POST /forgotPassword/updatePassword` - change the forgotten password.
+
 ## Getting Started
 
 ### Prerequisites
